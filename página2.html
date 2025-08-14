@@ -1,0 +1,188 @@
+página2.html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sua Loja | Pré-lançamento + Catálogo</title>
+<style>
+  :root{
+    --prim:#4CAF50; --cta:#ff9800; --cta-hover:#e68900;
+    --bg:#f7f7f8; --text:#222; --muted:#666;
+    --radius:16px; --shadow:0 10px 28px rgba(0,0,0,.08);
+    --maxw:1000px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{background:var(--prim);color:#fff;padding:26px 16px;text-align:center}
+  header h1{margin:0 0 6px;font-size:28px}
+  header p{margin:0;opacity:.95}
+  main{max-width:var(--maxw);margin:auto;padding:22px}
+  .box{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+  .grid{display:grid;gap:18px}
+  .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:center}
+  .hero img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+  .kpis{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .chip{background:#f1f1f1;border-radius:999px;padding:6px 12px;font-size:14px;display:flex;gap:6px;align-items:center}
+  .cta{display:inline-block;background:var(--cta);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:14px 18px}
+  .cta:hover{background:var(--cta-hover)}
+  .muted{color:var(--muted);font-size:14px}
+  h2{margin:0 0 8px}
+  .list{margin:0;padding-left:18px}
+  /* Catálogo */
+  #catalogo{display:grid;gap:18px}
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+  .card-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .card-info{padding:22px}
+  .card-info h3{margin:0 0 8px}
+  .beneficios{margin:0 0 14px;padding-left:18px}
+  .beneficios li{margin:6px 0}
+  .preco{margin:10px 0 14px}
+  .preco .de{color:var(--muted)}
+  .preco .por{font-size:22px;font-weight:700}
+  .preco .atual{color:#2e7d32}
+  .botao{display:inline-block;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:700}
+  .comprar{background:var(--cta);color:#fff}
+  .comprar:hover{background:var(--cta-hover)}
+  .esgotado{background:#e0e0e0;color:#555;cursor:not-allowed}
+  footer{margin-top:32px;background:#333;color:#fff;text-align:center;padding:16px}
+  footer a{color:#ffb74d;text-decoration:none}
+  @media (max-width:900px){ .hero{grid-template-columns:1fr} .card{grid-template-columns:1fr} .card-info{padding:18px} }
+</style>
+</head>
+<body>
+<header>
+  <h1>Nova Oferta chegando…</h1>
+  <p>Entre para a lista de interesse e receba acesso assim que liberarmos.</p>
+</header>
+
+<main class="grid">
+  <!-- ===== PRÉ-LANÇAMENTO / WHATSAPP ===== -->
+  <section class="box hero">
+    <div>
+      <h2>Em breve: <!-- EDITAR AQUI --> Nome do Produto</h2>
+      <p class="muted">Resumo rápido do que é e qual transformação entrega.
+        Ex.: “Curso prático para <strong>criar sua página de vendas completa</strong> mesmo do celular.”</p>
+
+      <ul class="list">
+        <li><!-- EDITAR AQUI --> Benefício 1 direto e específico</li>
+        <li><!-- EDITAR AQUI --> Benefício 2 que resolve uma dor</li>
+        <li><!-- EDITAR AQUI --> Benefício 3 mensurável ou visível</li>
+      </ul>
+
+      <div class="kpis">
+        <span class="chip">🚀 Pré-lançamento</span>
+        <span class="chip">🎁 Bônus para primeiros inscritos</span>
+        <span class="chip">🔒 Compra segura</span>
+      </div>
+
+      <!-- EDITAR AQUI: número do WhatsApp no formato internacional. Ex.: Brasil 55 + DDD + número -->
+      <a class="cta" target="_blank"
+         href="https://wa.me/5596999999999?text=Quero%20ser%20avisado%20assim%20que%20lan%C3%A7ar%20o%20produto.">
+         Quero ser avisado no WhatsApp
+      </a>
+      <p class="muted">Sem spam. Você recebe um aviso com o link assim que liberarmos.</p>
+    </div>
+
+    <!-- EDITAR AQUI: imagem provisória -->
+    <img src="https://via.placeholder.com/1000x700?text=Em+Breve" alt="Pré-lançamento">
+  </section>
+
+  <!-- ===== CATÁLOGO DINÂMICO (vários produtos) ===== -->
+  <section class="box">
+    <h2>Produtos disponíveis</h2>
+    <div id="catalogo"></div>
+    <p class="muted">Dica: para ativar/desativar ou mudar preços, edite a lista no final do arquivo (comentário “CATÁLOGO – EDITE AQUI”).</p>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Sua Marca. Todos os direitos reservados. ·
+     <a href="#">Política de Privacidade</a> · <a href="#">Termos</a> · <a href="#">Contato</a></p>
+</footer>
+
+<script>
+/* =========================================================
+   CATÁLOGO – EDITE AQUI
+   - Para adicionar produto: copie um bloco e cole abaixo.
+   - Campos: ativo (true/false), estoque ("disponivel" | "esgotado"),
+     nome, descricao, beneficios[], precoDe, precoPor, parcelamento,
+     imagem (URL) e link (URL do checkout).
+   ========================================================= */
+const produtos = [
+  {
+    ativo: true,
+    estoque: "disponivel",
+    nome: "Produto Exemplo 1",
+    descricao: "Descrição breve e direta, destacando benefícios principais.",
+    beneficios: ["✔ Benefício 1 claro","✔ Benefício 2 que resolve um problema","✔ Benefício 3 mensurável"],
+    precoDe: "R$ 197,00",
+    precoPor: "R$ 97,00",
+    parcelamento: "ou 12x de R$ 9,70*",
+    imagem: "https://via.placeholder.com/900x700?text=Produto+1",
+    link: "https://seu-link-de-pagamento.com"
+  },
+  {
+    ativo: true,
+    estoque: "disponivel",
+    nome: "Produto Exemplo 2",
+    descricao: "Outro produto com destaque para pontos fortes.",
+    beneficios: ["✔ Qualidade premium","✔ Garantia estendida","✔ Suporte especializado"],
+    precoDe: "R$ 297,00",
+    precoPor: "R$ 147,00",
+    parcelamento: "ou 12x de R$ 14,70*",
+    imagem: "https://via.placeholder.com/900x700?text=Produto+2",
+    link: "https://seu-link-de-pagamento.com"
+  },
+  {
+    ativo: false, /* coloque true quando quiser liberar */
+    estoque: "esgotado",
+    nome: "Produto Pré-lançamento",
+    descricao: "Entrará à venda em breve.",
+    beneficios: ["Acesso antecipado","Preço de lançamento","Bônus exclusivos"],
+    precoDe: "R$ 497,00",
+    precoPor: "R$ 297,00",
+    parcelamento: "ou 12x de R$ 29,70*",
+    imagem: "https://via.placeholder.com/900x700?text=Pre%CC%81-lancamento",
+    link: "https://seu-link-de-pagamento.com"
+  }
+];
+
+/* ===== Renderização ===== */
+const $catalogo = document.getElementById("catalogo");
+
+function criarCard(p){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="card-img">
+      <img src="${p.imagem}" alt="${p.nome}">
+    </div>
+    <div class="card-info">
+      <h3>${p.nome}</h3>
+      <p class="muted">${p.descricao}</p>
+      <ul class="beneficios">${p.beneficios.map(b=>`<li>${b}</li>`).join('')}</ul>
+      <div class="preco">
+        <div class="de">De: <s>${p.precoDe}</s></div>
+        <div class="por">Por: <span class="atual">${p.precoPor}</span></div>
+        <div class="muted">${p.parcelamento}</div>
+      </div>
+      ${p.estoque === "disponivel"
+        ? `<a class="botao comprar" target="_blank" href="${p.link}">🛒 Comprar Agora</a>`
+        : `<span class="botao esgotado">Esgotado / Em breve</span>`
+      }
+      <div class="muted" style="margin-top:8px">*Valores de parcelamento são estimativas.</div>
+    </div>
+  `;
+  return card;
+}
+
+function montarCatalogo(lista){
+  $catalogo.innerHTML = "";
+  lista.filter(p => p.ativo).forEach(p => $catalogo.appendChild(criarCard(p)));
+}
+
+montarCatalogo(produtos);
+</script>
+</body>
+</html>
