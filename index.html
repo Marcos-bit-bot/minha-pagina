@@ -1,4 +1,3 @@
-pagina2.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -35,6 +34,192 @@ pagina2.html
   .card-img img{width:100%;height:100%;object-fit:cover;display:block}
   .card-info{padding:22px}
   .card-info h3{margin:0 0 8px}
+  .beneficios{margin:0 0 14px;padding-left:18px}
+  .beneficios li{margin:6px 0}
+  .preco{margin:10px 0 14px}
+  .preco .de{color:var(--muted)}
+  .preco .por{font-size:22px;font-weight:700}
+  .preco .atual{color:#2e7d32}
+  .botao{display:inline-block;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:700}
+  .comprar{background:var(--cta);color:#fff}
+  .comprar:hover{background:var(--cta-hover)}
+  .esgotado{background:#e0e0e0;color:#555;cursor:not-allowed}
+  .disabled{pointer-events:none;opacity:.6}
+  footer{margin-top:32px;background:#333;color:#fff;text-align:center;padding:16px}
+  footer a{color:#ffb74d;text-decoration:none}
+  @media (max-width:900px){ .hero{grid-template-columns:1fr} .card{grid-template-columns:1fr} .card-info{padding:18px} }
+  /* aviso config */
+  .setup-tip{background:#fff7e6;border:1px solid #f6c56c;color:#5c3b00;padding:10px 12px;border-radius:10px;margin:12px 0;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Nova Oferta chegando…</h1>
+  <p>Entre para a lista de interesse e receba acesso assim que liberarmos.</p>
+</header>
+
+<main class="grid">
+  <!-- ===== PRÉ-LANÇAMENTO / WHATSAPP ===== -->
+  <section class="box hero">
+    <div>
+      <h2>Em breve: <!-- EDITAR AQUI --> Nome do Produto</h2>
+      <p class="muted">Resumo rápido do que é e qual transformação entrega.
+        Ex.: “Curso prático para <strong>criar sua página de vendas completa</strong> mesmo do celular.”</p>
+
+      <ul class="list">
+        <li><!-- EDITAR AQUI --> Benefício 1 direto e específico</li>
+        <li><!-- EDITAR AQUI --> Benefício 2 que resolve uma dor</li>
+        <li><!-- EDITAR AQUI --> Benefício 3 mensurável ou visível</li>
+      </ul>
+
+      <div class="kpis">
+        <span class="chip">🚀 Pré-lançamento</span>
+        <span class="chip">🎁 Bônus para primeiros inscritos</span>
+        <span class="chip">🔒 Compra segura</span>
+      </div>
+
+      <a id="whatsBtn" class="cta" target="_blank" href="#">Quero ser avisado no WhatsApp</a>
+      <p class="muted">Sem spam. Você recebe um aviso com o link assim que liberarmos.</p>
+
+      <div id="setupWhats" class="setup-tip" style="display:none">
+        Dica: preencha seu número na seção <strong>CONFIG</strong> do código (DDI+DDD+número) para ativar este botão.
+      </div>
+    </div>
+
+    <img src="https://via.placeholder.com/1000x700?text=Em+Breve" alt="Pré-lançamento">
+  </section>
+
+  <!-- ===== CATÁLOGO DINÂMICO (vários produtos) ===== -->
+  <section class="box">
+    <h2>Produtos disponíveis</h2>
+    <div id="catalogo"></div>
+    <p class="muted">Dica: para ativar/desativar ou mudar preços, edite a lista no final do arquivo (comentário “CATÁLOGO – EDITE AQUI”).</p>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Sua Marca. Todos os direitos reservados. ·
+     <a href="#">Política de Privacidade</a> · <a href="#">Termos</a> · <a href="#">Contato</a></p>
+</footer>
+
+<script>
+/* =========================================================
+   CONFIG — EDITE APENAS ESTES CAMPOS QUANDO TIVER OS DADOS
+   ========================================================= */
+const CONFIG = {
+  whatsappDDD: "",     // EX: "5592999999999" (DDI+DDD+numero) — se vazio, botão fica em modo "Em breve"
+  checkoutPadrao: "",  // EX: link de pagamento padrão (Mercado Pago / PagSeguro / PayPal). Se vazio, botão vira "Em breve"
+  captura: {           // Opção simples de captura por email (mailto) — funciona agora, sem cadastro
+    email: "seuemail@exemplo.com", // troque quando quiser; se manter como está, ainda funciona (só abre o email do usuário)
+    assunto: "Quero ser avisado do lançamento",
+    corpo: "Oi! Quero ser avisado quando o e-book for lançado."
+  }
+};
+
+/* =========================================================
+   PRÉ-LANÇAMENTO — Ativa botão do WhatsApp se houver número
+   ========================================================= */
+(function setupWhats(){
+  const btn = document.getElementById("whatsBtn");
+  const tip = document.getElementById("setupWhats");
+  const num = (CONFIG.whatsappDDD || "").replace(/\D/g,"");
+  if(num){
+    const texto = encodeURIComponent("Quero ser avisado quando lançar o e-book.");
+    btn.href = `https://wa.me/${num}?text=${texto}`;
+  } else {
+    // Sem número: transforma em captura por email (funciona hoje)
+    const mail = encodeURIComponent(CONFIG.captura.email);
+    const assunto = encodeURIComponent(CONFIG.captura.assunto);
+    const corpo = encodeURIComponent(CONFIG.captura.corpo);
+    btn.href = `mailto:${mail}?subject=${assunto}&body=${corpo}`;
+    tip.style.display = "block";
+  }
+})();
+
+/* =========================================================
+   CATÁLOGO – EDITE AQUI
+   - Para adicionar produto: copie um bloco e cole abaixo.
+   - Campos: ativo (true/false), estoque ("disponivel" | "esgotado"),
+     nome, descricao, beneficios[], precoDe, precoPor, parcelamento,
+     imagem (URL) e link (URL do checkout). Se link vazio => "Em breve".
+   ========================================================= */
+const produtos = [
+  {
+    ativo: true,
+    estoque: "disponivel",
+    nome: "E-book Exemplo 1",
+    descricao: "Descrição breve e direta do e-book. Transformação principal em 1–2 frases.",
+    beneficios: ["✔ Conteúdo prático", "✔ Acesso imediato", "✔ Atualizações gratuitas"],
+    precoDe: "R$ 97,00",
+    precoPor: "R$ 47,00",
+    parcelamento: "ou 12x de R$ 4,70*",
+    imagem: "https://via.placeholder.com/900x700?text=E-book+1",
+    link: CONFIG.checkoutPadrao // ← quando você tiver o link, basta preencher CONFIG.checkoutPadrao
+  },
+  {
+    ativo: false, /* coloque true quando quiser liberar */
+    estoque: "disponivel",
+    nome: "E-book Exemplo 2",
+    descricao: "Outro e-book com foco em resolver uma dor específica.",
+    beneficios: ["✔ Passo a passo", "✔ Exemplos reais", "✔ Suporte por e-mail"],
+    precoDe: "R$ 147,00",
+    precoPor: "R$ 77,00",
+    parcelamento: "ou 12x de R$ 7,70*",
+    imagem: "https://via.placeholder.com/900x700?text=E-book+2",
+    link: "" // vazio => botão vira "Em breve"
+  }
+];
+
+/* ===== Renderização ===== */
+const $catalogo = document.getElementById("catalogo");
+
+function criarCard(p){
+  const semLink = !p.link;
+  const esgotado = p.estoque !== "disponivel";
+  const estado = esgotado ? "esgotado" : (semLink ? "disabled" : "comprar");
+  const label = esgotado ? "Esgotado / Em breve" : (semLink ? "Em breve" : "🛒 Comprar Agora");
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <div class="card-img">
+      <img src="${p.imagem}" alt="${p.nome}">
+    </div>
+    <div class="card-info">
+      <h3>${p.nome}</h3>
+      <p class="muted">${p.descricao}</p>
+      <ul class="beneficios">${p.beneficios.map(b=>`<li>${b}</li>`).join('')}</ul>
+      <div class="preco">
+        <div class="de">De: <s>${p.precoDe}</s></div>
+        <div class="por">Por: <span class="atual">${p.precoPor}</span></div>
+        <div class="muted">${p.parcelamento}</div>
+      </div>
+      ${esgotado
+        ? `<span class="botao esgotado">${label}</span>`
+        : `<a class="botao ${estado}" ${semLink ? "" : `target="_blank" href="${p.link}"`}>${label}</a>`
+      }
+      <div class="muted" style="margin-top:8px">*Valores de parcelamento são estimativas.</div>
+    </div>
+  `;
+  if(semLink && !esgotado){
+    // sem link: botão "Em breve" não clica
+    const a = card.querySelector(".botao.disabled");
+    a.addEventListener("click", e => e.preventDefault());
+  }
+  return card;
+}
+
+function montarCatalogo(lista){
+  $catalogo.innerHTML = "";
+  lista.filter(p => p.ativo).forEach(p => $catalogo.appendChild(criarCard(p)));
+}
+
+montarCatalogo(produtos);
+</script>
+</body>
+</html>
+
+.card-info h3{margin:0 0 8px}
   .beneficios{margin:0 0 14px;padding-left:18px}
   .beneficios li{margin:6px 0}
   .preco{margin:10px 0 14px}
