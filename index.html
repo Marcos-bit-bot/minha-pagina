@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
@@ -25,7 +25,6 @@
   .chip{background:#f1f1f1;border-radius:999px;padding:6px 12px;font-size:14px;display:flex;gap:6px;align-items:center}
   .cta{display:inline-block;background:var(--cta);color:#fff;text-decoration:none;font-weight:700;border-radius:10px;padding:14px 18px}
   .cta:hover{background:var(--cta-hover)}
-  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px} /* ADICIONADO */
   .muted{color:var(--muted);font-size:14px}
 
   /* Catálogo */
@@ -74,13 +73,8 @@
         <span class="chip">🔒 Compra segura</span>
       </div>
 
-      <!-- ADICIONADO: dois botões no herói -->
-      <div class="cta-row">
-        <a id="whatsBtn" class="cta" target="_blank" href="#">Quero ser avisado no WhatsApp</a>
-        <a id="buyHero" class="cta" target="_blank" rel="noopener" href="#" style="display:none">Comprar agora</a>
-      </div>
-      <p id="tipWhats" class="muted" style="display:none">Dica: preencha seu WhatsApp na seção CONFIG do código.</p>
-      <p id="tipBuy" class="muted" style="display:none">Dica: configure seu link do Mercado Pago em <code>CONFIG.checkoutPadrao</code>.</p>
+      <!-- Só botão de compra -->
+      <a id="buyHero" class="cta" target="_blank" rel="noopener" href="#">Comprar agora</a>
     </div>
     <img src="https://via.placeholder.com/1000x700?text=Em+Breve" alt="Pré-lançamento">
   </section>
@@ -98,86 +92,49 @@
 </footer>
 
 <script>
-/* ========= CONFIG (edite quando quiser) ========= */
+/* ========= CONFIG ========= */
 const CONFIG = {
-  whatsappDDD: "",                  // ex: "5592999999999" (DDI+DDD+número)
-  checkoutPadrao: "",               // ex: https://mpago.la/abc123 (Mercado Pago)
+  checkoutPadrao: "https://mpago.la/abc123", // 👈 link fictício do Mercado Pago
   notaEntrega: "Após o pagamento, você receberá o acesso por e-mail."
 };
 
-/* Utils */
 const isUrl = (u)=>/^https?:\/\//i.test(u||"");
 
-/* WhatsApp: ativa se houver número; senão, mostra dica */
-(function(){
-  const num = (CONFIG.whatsappDDD||"").replace(/\D/g,"");
-  const btn = document.getElementById("whatsBtn");
-  const tip = document.getElementById("tipWhats");
-  if(num){
-    const texto = encodeURIComponent("Quero ser avisado quando lançar o e-book.");
-    btn.href = `https://wa.me/${num}?text=${texto}`;
-  }else{
-    btn.href = `mailto:seuemail@exemplo.com?subject=${encodeURIComponent('Quero ser avisado do lançamento')}`;
-    tip.style.display = "block";
-  }
-})();
-
-/* Botão Comprar do herói: usa checkoutPadrao se for URL válida */
+/* Botão Comprar do herói */
 (function(){
   const buy = document.getElementById("buyHero");
-  const tip = document.getElementById("tipBuy");
   if(isUrl(CONFIG.checkoutPadrao)){
     buy.href = CONFIG.checkoutPadrao;
-    buy.style.display = "inline-block";
   }else{
-    tip.style.display = "block";
+    buy.classList.add("disabled");
+    buy.removeAttribute("href");
   }
 })();
 
-/* ========= CATÁLOGO – EDITE AQUI ========= */
+/* Produtos do catálogo */
 const produtos = [
   {
     ativo:true,
-    estoque:"disponivel",             // "disponivel" | "esgotado"
+    estoque:"disponivel",
     nome:"E-book Exemplo 1",
     descricao:"Descrição breve do e-book.",
     beneficios:["✔ Conteúdo prático","✔ Acesso imediato","✔ Atualizações gratuitas"],
     precoDe:"R$ 97,00",
     precoPor:"R$ 47,00",
     imagem:"https://via.placeholder.com/900x700?text=E-book+1",
-    link:""                           // se vazio: usa CONFIG.checkoutPadrao; se nenhum estiver setado => “Em breve”
-  },
-  {
-    ativo:false,                      // ative quando quiser liberar
-    estoque:"disponivel",
-    nome:"E-book Exemplo 2",
-    descricao:"Outro e-book focado em resolver uma dor específica.",
-    beneficios:["✔ Passo a passo","✔ Exemplos reais","✔ Suporte por e-mail"],
-    precoDe:"R$ 147,00",
-    precoPor:"R$ 77,00",
-    imagem:"https://via.placeholder.com/900x700?text=E-book+2",
-    link:""                           // vazio => “Em breve”
+    link:"" // se vazio usa CONFIG.checkoutPadrao
   }
 ];
 
-/* ========= Renderização ========= */
 const $catalogo = document.getElementById("catalogo");
 
 function cardProduto(p){
-  // Fallback: se p.link não existir, tenta usar CONFIG.checkoutPadrao
   const efetivoLink = isUrl(p.link) ? p.link : (isUrl(CONFIG.checkoutPadrao) ? CONFIG.checkoutPadrao : "");
-
   const semLink = !efetivoLink;
   const esgotado = p.estoque !== "disponivel";
-  const label = esgotado ? "Esgotado / Em breve" : (semLink ? "Em breve" : "🛒 Comprar Agora");
+  const label = esgotado ? "Esgotado" : (semLink ? "Em breve" : "🛒 Comprar Agora");
 
-  // imagem clicável se houver link
-  const imgHtml = semLink || esgotado
-    ? `<div class="card-img"><img src="${p.imagem}" alt="${p.nome}"></div>`
-    : `<a class="card-img" href="${efetivoLink}" target="_blank" rel="noopener">
-         <img src="${p.imagem}" alt="${p.nome}">
-       </a>`;
-
+  const imgHtml = `<div class="card-img"><img src="${p.imagem}" alt="${p.nome}"></div>`;
   const btnHtml = esgotado
     ? `<span class="botao esgotado">${label}</span>`
     : (semLink
@@ -212,4 +169,4 @@ function montar(lista){
 montar(produtos);
 </script>
 </body>
-</html>     
+</html>         
